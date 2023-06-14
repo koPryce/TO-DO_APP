@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToDoIt</title>
+    <link rel="stylesheet" href="./fontawesome/css/fontawesome.min.css" />
+    <link rel="stylesheet" href="./fontawesome/css/regular.min.css" />
+    <link rel="stylesheet" href="./fontawesome/css/solid.min.css" />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <header id="header"><i class="fa fa-list"></i>Task List</header>
+    <table id="tasks">
+      <button id="addBtn">Add</button>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Priority</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+
+      <tr>
+        <td>Shopping List</td>
+        <td>I am here to stay</td>
+        <td>High</td>
+        <td>6/14/2023</td>
+        <td>
+          <button>Edit</button>
+          <button>View</button>
+          <button>Delete</button>
+        </td>
+      </tr>
+    </table>
+
+    <dialog id="addTask">
+      <form method="POST">
+        <label for="name" class="label">Name:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Name"
+          aria-label="Enter your name"
+          title="Please enter your name"
+        />
+
+        <label for="description" class="label">Description:</label>
+        <textarea
+          id="description"
+          name="description"
+          placeholder="Description (paragraph or bullet points)"
+          rows="4"
+          aria-label="Enter a description"
+          title="Please provide a description"
+        ></textarea>
+
+        <label for="priority" class="label">Priority:</label>
+        <select
+          id="priority"
+          name="priority"
+          placeholder="Priority"
+          aria-label="Select priority"
+          title="Choose the priority"
+        >
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+
+        <label for="date" class="label">Date:</label>
+        <input
+          type="date"
+          id="date"
+          name="date"
+          min="2023-06-12"
+          aria-label="Select a date"
+          title="Please choose a date"
+        />
+
+        <div>
+          <button id="cancelBtn" type="button">Cancel</button>
+          <button id="confirmBtn" value="default">Confirm</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="index.js" type="module"></script>
+  </body>
+</html>
