@@ -28,27 +28,44 @@ confirmBtn.addEventListener("click", (event) => {
     return;
   }
 
-  if (task.trim() === "") {
-    errorMsg.textContent = "Please enter a task";
-    errorPopup.style.display = "block";
-    return;
-  }
-
   if (priority.trim() === "") {
     errorMsg.textContent = "Please select a priority";
     errorPopup.style.display = "block";
     return;
   }
 
-  if (date.trim() === "") {
-    errorMsg.textContent = "Please choose a date";
-    errorPopup.style.display = "block";
-    return;
-  }
+  const taskObject = {
+    title: title.trim(),
+    task: task.trim(),
+    priority: priority.trim(),
+    date: date.trim(),
+  };
 
-  successMsg.textContent = "Task added!";
-  successPopup.style.display = "block";
-  addTask.close();
+  console.log(taskObject);
+
+  const addTaskFunc = async () => {
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(taskObject),
+      });
+      const data = await response.json();
+      console.log(data);
+
+      successMsg.textContent = "Task added!";
+      successPopup.style.display = "block";
+      addTask.close();
+    } catch (error) {
+      errorMsg.textContent = "There was an error adding the task";
+      errorPopup.style.display = "block";
+      console.error("Error:", error);
+    }
+  };
+
+  addTaskFunc();
 });
 
 cancelBtn.addEventListener("click", () => {
@@ -78,24 +95,39 @@ dateInput.addEventListener("input", function () {
 });
 
 // Edit Task
-const editBtn = document.querySelector("#editBtn");
+const editBtns = document.querySelectorAll(".editBtn");
 const editTask = document.querySelector("#editTask");
 
-editBtn.addEventListener("click", () => {
-  console.log("Edit")
-})
+if (editBtns !== null) {
+  editBtns.forEach((button) => {
+    button.addEventListener("click", () => {
+      const taskId = button.getAttribute("data-task-id");
+      console.log(taskId);
+    });
+  });
+}
 
 // View Task
-const viewBtn = document.querySelector("#viewBtn");
+const viewBtns = document.querySelectorAll(".viewBtn");
 const viewTask = document.querySelector("#viewTask");
 
-viewBtn.addEventListener("click", () => {
-  console.log("View")
-})
+if (viewBtns !== null) {
+  viewBtns.forEach((button) => {
+    button.addEventListener("click", () => {
+      const taskId = button.getAttribute("data-task-id");
+      console.log(taskId);
+    });
+  });
+}
 
 // Delete Task
-const deleteBtn = document.querySelector("#deleteBtn");
+const deleteBtns = document.querySelectorAll(".deleteBtn");
 
-deleteBtn.addEventListener("click", () => {
-  console.log("Delete")
-})
+if (deleteBtns !== null) {
+  deleteBtns.forEach((button) => {
+    button.addEventListener("click", () => {
+      const taskId = button.getAttribute("data-task-id");
+      console.log(taskId);
+    });
+  });
+}

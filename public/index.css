@@ -10,9 +10,10 @@
   margin-top: 20px;
 }
 
-/* #header i {
-  margin-right: 10px;
-} */
+#header h1 {
+  display: inline-block;
+  margin-left: 10px;
+}
 
 /* View */
 #addBtnContainer {
@@ -112,30 +113,30 @@
   cursor: pointer;
 }
 
-#editBtn {
+.editBtn {
   background-color: blue;
   color: white;
 }
 
-#editBtn:hover {
+.editBtn:hover {
     background-color: rgb(0, 0, 164);
 }
 
-#viewBtn {
+.viewBtn {
   background-color: #17a2b8;
   color: white;
 }
 
-#viewBtn:hover {
+.viewBtn:hover {
   background-color: #128293;
 }
 
-#deleteBtn {
+.deleteBtn {
   background-color: red;
   color: white;
 }
 
-#deleteBtn:hover {
+.deleteBtn:hover {
   background-color: rgb(194, 0, 0);
 }
 
