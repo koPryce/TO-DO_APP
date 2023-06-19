@@ -1,11 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const app = express();
 
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
 app.use("/fontawesome", express.static(__dirname + "/fontawesome"));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const connectionString = "mongodb://0.0.0.0:27017/ToDoIt";
 mongoose
@@ -32,12 +36,12 @@ const Task = mongoose.model("Tasks", taskSchema);
 app
   .route("/")
   .get(async (req, res) => {
-    const taskId = req.query.id;
-    if (taskId) {
+    const { id } = req.query;
+    if (id) {
       try {
-        const task = await Task.findById(taskId);
+        const task = await Task.findById(id);
         if (task) {
-          res.render("index", { action: "get task", task });
+          res.json({ action: "get task", task });
         } else {
           res.status(404).send("Task not found");
         }
@@ -48,7 +52,19 @@ app
     } else {
       try {
         const tasks = await Task.find({});
-        res.render("index", { action: "get tasks", tasks });
+        const formattedTasks = tasks.map(task => {
+          const formattedDate = new Intl.DateTimeFormat('en-US', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric',
+          }).format(task.date);
+    
+          return {
+            ...task._doc,
+            date: formattedDate,
+          };
+        });
+        res.render("index", { action: "get tasks", tasks: formattedTasks });
       } catch (error) {
         console.error("Error retrieving tasks:", error);
         res.status(500).send("Internal server error");
@@ -60,8 +76,7 @@ app
       const { title, task, priority, date } = req.body;
       const newTask = new Task({ title, task, priority, date });
       const value = await newTask.save();
-      res.render("index", { action: "added", value });
-      res.redirect("/");
+      res.json({ message: "Task added successfully" });
     } catch (error) {
       console.error("Error creating task:", error);
       res.status(500).send("Internal server error");
@@ -76,7 +91,8 @@ app
         { new: true }
       );
       if (updatedTask) {
-        res.render("index", { action: "updated", task: updatedTask });
+        // res.render("index", { action: "updated", task: updatedTask });
+        res.json({ message: "Task updated successfully" });
       } else {
         res.status(404).send("Task not found");
       }
@@ -90,7 +106,7 @@ app
       const { id } = req.body;
       const deletedTask = await Task.findByIdAndDelete(id);
       if (deletedTask) {
-        res.render("index", { action: "deleted" });
+        res.json({ message: "Task deleted successfully" });
       } else {
         res.status(404).send("Task not found");
       }

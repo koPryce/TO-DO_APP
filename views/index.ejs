@@ -23,6 +23,7 @@
     <table id="tasks">
       <thead>
         <tr>
+          <th>Complete?</th>
           <th>Title</th>
           <th>Task</th>
           <th>Priority</th>
@@ -37,13 +38,18 @@
         </tr>
         <% } else { %> <% tasks.forEach(task => { %>
         <tr>
+          <td></td>
           <td><%= task.title %></td>
           <td id="taskValue"><%= task.task %></td>
-          <td><%= task.priority %></td>
+          <td data-value="<%= task.priority %>"><p><%= task.priority %></p></td>
           <td><%= task.date %></td>
           <td>
-            <button class="editBtn" data-task-id="<%= task._id %>"><i class="fas fa-edit"></i> Edit</button>
-            <button class="viewBtn" data-task-id="<%= task._id %>"><i class="fas fa-eye"></i> View</button>
+            <button class="editBtn" data-task-id="<%= task._id %>">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <!-- <button class="viewBtn" data-task-id="<%= task._id %>">
+              <i class="fas fa-eye"></i> View
+            </button> -->
             <button class="deleteBtn" data-task-id="<%= task._id %>">
               <i class="fas fa-trash-alt"></i> Delete
             </button>
@@ -60,6 +66,13 @@
       </div>
     </div>
 
+    <div class="popup" id="deletePopup">
+      <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <p id="deleteMsg"></p>
+      </div>
+    </div>
+
     <dialog id="addTask">
       <div class="popup" id="errorPopup">
         <div class="popup-content">
@@ -72,7 +85,7 @@
         <label for="title" class="label">Title:</label>
         <input
           type="text"
-          id="title"
+          class="title"
           name="title"
           placeholder="Title"
           aria-label="Enter the title"
@@ -81,9 +94,9 @@
 
         <label for="task" class="label">Task:</label>
         <textarea
-          id="task"
+          class="task"
           name="task"
-          placeholder="Task (paragraph or bullet points)"
+          placeholder="Task"
           rows="4"
           aria-label="Enter the task"
           title="Please provide the task"
@@ -91,7 +104,7 @@
 
         <label for="priority" class="label">Priority:</label>
         <select
-          id="priority"
+          class="priority"
           name="priority"
           placeholder="Priority"
           aria-label="Select priority"
@@ -106,9 +119,8 @@
         <label for="date" class="label">Date:</label>
         <input
           type="date"
-          id="date"
+          class="date"
           name="date"
-          min="2023-06-12"
           aria-label="Select a date"
           title="Please choose a date"
         />
@@ -121,41 +133,40 @@
     </dialog>
 
     <dialog id="editTask">
-      <div class="popup" id="errorPopup">
+      <div class="popup" id="confimPopup">
         <div class="popup-content">
           <span class="close-btn">&times;</span>
-          <p id="errorMsg"></p>
+          <p id="confirmMsg"></p>
         </div>
       </div>
-
-      <form method="POST">
+      <form>
         <label for="title" class="label">Title:</label>
         <input
           type="text"
-          id="title"
+          class="title"
           name="title"
           placeholder="Title"
-          aria-label="Enter the title"
-          title="Please enter the title"
+          aria-label="Title"
+          title="Title"
         />
 
         <label for="task" class="label">Task:</label>
         <textarea
-          id="task"
+          class="task"
           name="task"
-          placeholder="Task (paragraph or bullet points)"
+          placeholder="Task"
           rows="4"
-          aria-label="Enter the task"
-          title="Please provide the task"
+          aria-label="Task"
+          title="Task"
         ></textarea>
 
         <label for="priority" class="label">Priority:</label>
         <select
-          id="priority"
+          class="priority"
           name="priority"
           placeholder="Priority"
-          aria-label="Select priority"
-          title="Choose the priority"
+          aria-label="Priority"
+          title="Priority"
         >
           <option value="" selected></option>
           <option value="Low Priority">Low</option>
@@ -166,56 +177,50 @@
         <label for="date" class="label">Date:</label>
         <input
           type="date"
-          id="date"
+          class="date"
           name="date"
-          min="2023-06-12"
-          aria-label="Select a date"
-          title="Please choose a date"
+          aria-label="Date"
+          title="Date"
         />
 
         <div id="dialogBtns">
-          <button id="cancelBtn" type="button">Cancel</button>
-          <button id="confirmBtn" value="default">Confirm</button>
+          <button id="closeBtn" type="button">Close</button>
         </div>
       </form>
     </dialog>
 
     <dialog id="viewTask">
-      <div class="popup" id="errorPopup">
-        <div class="popup-content">
-          <span class="close-btn">&times;</span>
-          <p id="errorMsg"></p>
-        </div>
-      </div>
-
-      <form method="POST">
+      <form>
         <label for="title" class="label">Title:</label>
         <input
           type="text"
-          id="title"
+          class="title"
           name="title"
           placeholder="Title"
-          aria-label="Enter the title"
-          title="Please enter the title"
+          aria-label="Title"
+          title="Title"
+          readonly
         />
 
         <label for="task" class="label">Task:</label>
         <textarea
-          id="task"
+          class="task"
           name="task"
-          placeholder="Task (paragraph or bullet points)"
+          placeholder="Task"
           rows="4"
-          aria-label="Enter the task"
-          title="Please provide the task"
+          aria-label="Task"
+          title="Task"
+          readonly
         ></textarea>
 
         <label for="priority" class="label">Priority:</label>
         <select
-          id="priority"
+          class="priority"
           name="priority"
           placeholder="Priority"
-          aria-label="Select priority"
-          title="Choose the priority"
+          aria-label="Priority"
+          title="Priority"
+          disabled
         >
           <option value="" selected></option>
           <option value="Low Priority">Low</option>
@@ -226,16 +231,32 @@
         <label for="date" class="label">Date:</label>
         <input
           type="date"
-          id="date"
+          class="date"
           name="date"
-          min="2023-06-12"
-          aria-label="Select a date"
-          title="Please choose a date"
+          aria-label="Date"
+          title="Date"
+          readonly
         />
 
         <div id="dialogBtns">
-          <button id="cancelBtn" type="button">Cancel</button>
-          <button id="confirmBtn" value="default">Confirm</button>
+          <button id="closeBtn" type="button">Close</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="deleteTask">
+      <div class="popup" id="errorPopup">
+        <div class="popup-content">
+          <span class="close-btn">&times;</span>
+          <p id="errorMsg"></p>
+        </div>
+      </div>
+
+      <form method="dialog">
+        <p id="warningMsg">Are you sure you want to delete this task?</p>
+        <div id="dialogBtns">
+          <button id="cancelDeletion" type="button">Cancel</button>
+          <button id="confirmDeletion" value="default">Confirm</button>
         </div>
       </form>
     </dialog>

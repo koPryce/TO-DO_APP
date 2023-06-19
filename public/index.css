@@ -35,7 +35,7 @@
 }
 
 #addBtn:hover {
-    background-color: rgb(0, 100, 0);
+  background-color: rgb(0, 100, 0);
 }
 
 /* Pop up */
@@ -69,15 +69,19 @@
 }
 
 #errorMsg,
-#successMsg {
+#successMsg,
+#deleteMsg {
   margin: 0;
+  text-align: center;
 }
 
-#errorMsg {
+#errorMsg,
+#warningMsg {
   color: red;
 }
 
-#successMsg {
+#successMsg,
+#deleteMsg {
   color: green;
 }
 
@@ -119,7 +123,7 @@
 }
 
 .editBtn:hover {
-    background-color: rgb(0, 0, 164);
+  background-color: rgb(0, 0, 164);
 }
 
 .viewBtn {
@@ -140,7 +144,28 @@
   background-color: rgb(194, 0, 0);
 }
 
-/* Add Tasks Dialog */
+td[data-value="High Priority"] p {
+  color: white;
+  background-color: red;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+td[data-value="Medium Priority"] p {
+  color: white;
+  background-color: rgb(236, 236, 0);
+  border-radius: 10px;
+  padding: 5px;
+}
+
+td[data-value="Low Priority"] p {
+  color: white;
+  background-color: green;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+/* Dialogs */
 
 .label {
   position: absolute;
@@ -154,18 +179,28 @@
   clip-path: inset(50%);
 }
 
-#addTask form {
+#addTask form,
+#viewTask form,
+#editTask form {
   display: flex;
   flex-direction: column;
 }
 
-#addTask label {
+#addTask label,
+#viewTask label,
+#editTask label {
   margin-bottom: 10px;
 }
 
 #addTask textarea,
 #addTask input,
-#addTask select {
+#addTask select,
+#viewTask textarea,
+#viewTask input,
+#viewTask select,
+#editTask textarea,
+#editTask input,
+#editTask select {
   margin-bottom: 20px;
 }
 
@@ -174,12 +209,19 @@
   justify-content: space-between;
 }
 
-#cancelBtn {
+#cancelBtn,
+#cancelDeletion,
+#closeBtn {
   background-color: red;
   color: white;
 }
 
-#confirmBtn {
+#closeBtn {
+  margin: auto;
+}
+
+#confirmBtn,
+#confirmDeletion {
   background-color: green;
   color: white;
 }
