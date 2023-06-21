@@ -149,13 +149,15 @@ td[data-value="High Priority"] p {
   background-color: red;
   border-radius: 10px;
   padding: 5px;
+  width: 60%;
 }
 
 td[data-value="Medium Priority"] p {
   color: white;
-  background-color: rgb(236, 236, 0);
+  background-color: rgb(218, 218, 0);
   border-radius: 10px;
   padding: 5px;
+  width: 60%;
 }
 
 td[data-value="Low Priority"] p {
@@ -163,6 +165,11 @@ td[data-value="Low Priority"] p {
   background-color: green;
   border-radius: 10px;
   padding: 5px;
+  width: 60%;
+}
+
+td p{
+  margin: auto;
 }
 
 /* Dialogs */

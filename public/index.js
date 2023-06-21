@@ -213,3 +213,20 @@ if (deleteBtns !== null) {
     });
   });
 }
+
+// Toggle completed state
+const completeBoxes = document.querySelectorAll(".completeBox");
+completeBoxes.forEach(box => {
+  box.addEventListener("click", () => {
+    let taskId = box.getAttribute("data-task-id");
+
+    const toggleState = async () =>{
+      const  response = await fetch('/', {
+        method: 'PUT',
+        
+      })
+    }
+
+    toggleState();
+  })
+})

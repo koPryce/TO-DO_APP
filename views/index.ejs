@@ -38,7 +38,18 @@
         </tr>
         <% } else { %> <% tasks.forEach(task => { %>
         <tr>
-          <td></td>
+          <td>
+            <input
+              class="completeBox"
+              type="checkbox"
+              <%
+              if
+              (task.completed)
+              {
+              %
+            />
+            checked <%} %> data-task-id="<%= task._id %>">
+          </td>
           <td><%= task.title %></td>
           <td id="taskValue"><%= task.task %></td>
           <td data-value="<%= task.priority %>"><p><%= task.priority %></p></td>

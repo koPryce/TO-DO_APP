@@ -25,6 +25,7 @@ mongoose
   });
 
 const taskSchema = new mongoose.Schema({
+  completed: {type: Boolean, default: false },
   title: { type: String, required: true },
   task: { type: String },
   priority: { type: String, required: true },
@@ -84,14 +85,13 @@ app
   })
   .put(async (req, res) => {
     try {
-      const { id, title, task, priority, date } = req.body;
+      const { id, title, task, priority, date, completed } = req.body;
       const updatedTask = await Task.findByIdAndUpdate(
         id,
-        { title, task, priority, date },
+        { title, task, priority, date, cpmpleted: !completed },
         { new: true }
       );
       if (updatedTask) {
-        // res.render("index", { action: "updated", task: updatedTask });
         res.json({ message: "Task updated successfully" });
       } else {
         res.status(404).send("Task not found");
