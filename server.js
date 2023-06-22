@@ -25,7 +25,7 @@ mongoose
   });
 
 const taskSchema = new mongoose.Schema({
-  completed: {type: Boolean, default: false },
+  completed: { type: Boolean, default: false },
   title: { type: String, required: true },
   task: { type: String },
   priority: { type: String, required: true },
@@ -42,7 +42,20 @@ app
       try {
         const task = await Task.findById(id);
         if (task) {
-          res.json({ action: "get task", task });
+          const originalDate = String(task.date);
+          const parts = originalDate.split(" ");
+          const monthIndex = new Date(parts[1] + " 1, 2000").getMonth() + 1;
+          const month = monthIndex.toString().padStart(2, "0");
+          const day = Number(parts[2]) + 1;
+          const year = parts[3];
+
+          const formattedDate = `${year}-${month}-${day}`;
+
+          const formattedTask = {
+            ...task._doc,
+            date: formattedDate,
+          };
+          res.json({ action: "get task", task: formattedTask });
         } else {
           res.status(404).send("Task not found");
         }
@@ -53,18 +66,33 @@ app
     } else {
       try {
         const tasks = await Task.find({});
-        const formattedTasks = tasks.map(task => {
-          const formattedDate = new Intl.DateTimeFormat('en-US', {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric',
-          }).format(task.date);
-    
+        const formattedTasks = tasks.map((task) => {
+          const originalDate = String(task.date);
+
+          const parts = originalDate.split(" ");
+          const monthIndex = new Date(parts[1] + " 1, 2000").getMonth() + 1;
+          const month = monthIndex.toString().padStart(2, "0");
+          const day = Number(parts[2]) + 1;
+          const year = parts[3];
+
+          const formattedDate = `${month}/${day}/${year}`;
+
           return {
             ...task._doc,
             date: formattedDate,
           };
         });
+
+        formattedTasks.sort((a, b) => {
+          if (a.completed && !b.completed) {
+            return 1;
+          }
+          if (!a.completed && b.completed) {
+            return -1;
+          }
+          return 0;
+        });
+
         res.render("index", { action: "get tasks", tasks: formattedTasks });
       } catch (error) {
         console.error("Error retrieving tasks:", error);
@@ -88,7 +116,7 @@ app
       const { id, title, task, priority, date, completed } = req.body;
       const updatedTask = await Task.findByIdAndUpdate(
         id,
-        { title, task, priority, date, cpmpleted: !completed },
+        { title, task, priority, date, completed },
         { new: true }
       );
       if (updatedTask) {

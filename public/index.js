@@ -2,7 +2,6 @@
 const addBtn = document.querySelector("#addBtn");
 const addTask = document.querySelector("#addTask");
 const deleteTask = document.querySelector("#deleteTask");
-const viewTask = document.querySelector("#viewTask");
 const editTask = document.querySelector("#editTask");
 const confirmBtn = addTask.querySelector("#confirmBtn");
 const cancelBtn = addTask.querySelector("#cancelBtn");
@@ -97,7 +96,7 @@ dateInput.setAttribute("min", currentDate);
 dateInput.addEventListener("input", function () {
   const selectedDate = this.value;
 
-  if (selectedDate > currentDate) {
+  if (selectedDate < currentDate) {
     this.value = currentDate;
   }
 });
@@ -106,23 +105,11 @@ dateInput.addEventListener("input", function () {
 const editBtns = document.querySelectorAll(".editBtn");
 
 if (editBtns !== null) {
+  let taskId
   editBtns.forEach((button) => {
     button.addEventListener("click", () => {
-      const taskId = button.getAttribute("data-task-id");
-      console.log(taskId);
-    });
-  });
-}
-
-// View Task
-const viewBtns = document.querySelectorAll(".viewBtn");
-
-if (viewBtns !== null) {
-  viewBtns.forEach((button) => {
-    button.addEventListener("click", () => {
-      viewTask.showModal();
-      const taskId = button.getAttribute("data-task-id");
-
+      editTask.showModal();
+      taskId = button.getAttribute("data-task-id");
       const viewTaskFunc = async () => {
         try {
           const response = await fetch(`/?id=${taskId}`, {
@@ -132,16 +119,15 @@ if (viewBtns !== null) {
             },
           });
           const data = await response.json();
-          const title = viewTask.querySelector(".title");
-          const task = viewTask.querySelector(".task");
-          const priority = viewTask.querySelector(".priority");
-          const date = viewTask.querySelector(".date");
+          const title = editTask.querySelector(".title");
+          const task = editTask.querySelector(".task");
+          const priority = editTask.querySelector(".priority");
+          const date = editTask.querySelector(".date");
 
           title.value = data.task.title;
           task.textContent = data.task.task;
           priority.value = data.task.priority;
           date.value = data.task.date;
-
         } catch (error) {
           errorMsg.textContent = "There was an error retrieving the task";
           errorPopup.style.display = "block";
@@ -153,10 +139,66 @@ if (viewBtns !== null) {
     });
   });
 
-  const viewCancelBtn = viewTask.querySelector("#closeBtn");
+  const closeUpdateBtn = editTask.querySelector("#closeUpdateBtn");
+  closeUpdateBtn.addEventListener("click", () => {
+    editTask.close();
+  });
 
-  viewCancelBtn.addEventListener("click", () => {
-    viewTask.close();
+  const updateBtn = editTask.querySelector("#updateBtn");
+  updateBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    const title = editTask.querySelector(".title").value;
+    const task = editTask.querySelector(".task").value;
+    const priority = editTask.querySelector(".priority").value;
+    const date = editTask.querySelector(".date").value;
+
+    if (title.trim() === "") {
+      errorMsg.textContent = "Please enter a title";
+      errorPopup.style.display = "block";
+      return;
+    }
+
+    if (priority.trim() === "") {
+      errorMsg.textContent = "Please select a priority";
+      errorPopup.style.display = "block";
+      return;
+    }
+
+    const taskObject = {
+      id: taskId,
+      title: title.trim(),
+      task: task.trim(),
+      priority: priority.trim(),
+      date: date.trim(),
+    };
+
+    const updateTaskFunc = async () => {
+      try {
+        const response = await fetch("/", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(taskObject),
+        });
+        const data = await response.json();
+
+        successMsg.textContent = "Task updated!";
+        successPopup.style.display = "block";
+        editTask.close();
+
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
+      } catch (error) {
+        errorMsg.textContent = "There was an error updating the task";
+        errorPopup.style.display = "block";
+        console.error("Error:", error);
+      }
+    };
+
+    updateTaskFunc();
   });
 }
 
@@ -216,17 +258,41 @@ if (deleteBtns !== null) {
 
 // Toggle completed state
 const completeBoxes = document.querySelectorAll(".completeBox");
-completeBoxes.forEach(box => {
+completeBoxes.forEach((box) => {
   box.addEventListener("click", () => {
     let taskId = box.getAttribute("data-task-id");
+    const completed = box.checked;
 
-    const toggleState = async () =>{
-      const  response = await fetch('/', {
-        method: 'PUT',
-        
-      })
-    }
+    const toggleState = async () => {
+      const response = await fetch("/", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: taskId, completed }),
+      });
+      if (response.ok) {
+        console.log("Task updated successfully");
+      } else {
+        console.error("Error updating task");
+      }
+    };
 
     toggleState();
-  })
-})
+  });
+
+  box.addEventListener("change", () => {
+    const parentTd = box.parentElement;
+    const parentRow = parentTd.parentElement;
+    const taskDetails = parentRow.querySelectorAll(".task-row:not(:first-child)");
+    if (box.checked) {
+      taskDetails.forEach((detail) => {
+        detail.classList.add("strikeThrough");
+      });
+    } else {
+      taskDetails.forEach((detail) => {
+        detail.classList.remove("strikeThrough");
+      });
+    }
+  });
+});
