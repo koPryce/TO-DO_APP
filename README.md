@@ -6,7 +6,7 @@ This project is a Todo App built using HTML, CSS, and JavaScript, with an Expres
 ## Installation
 To run this project locally, please follow the instructions below:
 
-1. Clone the repository: `git clone https://github.com/username/project.git`
+1. Clone the repository: `git clone https://github.com/koPryce/TO-DO_APP.git`
 2. Navigate to the project directory: `cd project`
 3. Install the required dependencies:
    - Make sure you have Node.js and npm (Node Package Manager) installed on your machine.
