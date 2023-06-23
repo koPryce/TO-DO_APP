@@ -71,3 +71,6 @@ This project is licensed under the [MIT License](LICENSE).
 - [Nodemon](https://nodemon.io/)
 - [Font Awesome](https://fontawesome.com/)
 - [body-parser](https://www.npmjs.com/package/body-parser)
+
+## Alternative: Link to Hosted Site
+https://todoit-3794783d937a.herokuapp.com/
